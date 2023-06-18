@@ -1,6 +1,7 @@
 import React from "react";
 import { ImageBackground, SafeAreaView, View } from "react-native";
 import StyledText from "../components/StyledText";
+import CircularProgress from "../components/CircularProgress";
 
 export default function Home() {
   const date = new Date().toDateString();
@@ -29,8 +30,8 @@ export default function Home() {
               />
             </View>
 
-            {/*dashboard pertange*/}
-            <View className="bg-halfOpacity"></View>
+            {/*dashboard progess*/}
+            <CircularProgress size={60} strokeWidth={3} progress={0.7} />
           </View>
         </View>
       </SafeAreaView>
