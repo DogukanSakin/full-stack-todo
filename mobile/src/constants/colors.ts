@@ -7,4 +7,5 @@ export const colors = {
     threeQuarterOpacity : 'rgba(255,255,255,0.7)',
     white : '#ffffff',
     primary: '#4a29ab',
+    modalGradientColors : ['#a53291',"#5abed8"],
 }

@@ -1,7 +1,9 @@
 import React, { useRef, useEffect } from "react";
 import { View, Animated, StyleSheet } from "react-native";
+
 import { Svg, Circle } from "react-native-svg";
 import { colors } from "../constants/colors";
+
 import StyledText from "./StyledText";
 
 interface IProps {
@@ -15,9 +17,18 @@ export default function CircularProgress({
   size,
   strokeWidth,
 }: IProps) {
+  //Mark: - Animaton
   const animatedValue = useRef(new Animated.Value(0)).current;
   const circleRef = useRef<any>(null);
+  const AnimatedCircle = Animated.createAnimatedComponent(Circle);
+  const circumference = size * Math.PI;
+  const radius = size / 2;
+  const animatedStrokeWidth = animatedValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: [circumference, 0],
+  });
 
+  //Mark: - Hooks
   useEffect(() => {
     Animated.timing(animatedValue, {
       toValue: progress,
@@ -26,13 +37,7 @@ export default function CircularProgress({
     }).start();
   }, [progress]);
 
-  const circumference = size * Math.PI;
-  const radius = size / 2;
-  const animatedStrokeWidth = animatedValue.interpolate({
-    inputRange: [0, 1],
-    outputRange: [circumference, 0],
-  });
-
+  //Mark: - Render
   return (
     <View className="justify-center items-center">
       <Svg width={size} height={size}>
@@ -64,12 +69,10 @@ export default function CircularProgress({
       >
         <StyledText
           text={`${Math.round(progress * 100)}%`}
-          overrideStyles="text-large text-white  position-absolute"
+          overrideStyles="text-medium text-white  position-absolute"
           fontFamily="family-semiBold"
         />
       </View>
     </View>
   );
 }
-
-const AnimatedCircle = Animated.createAnimatedComponent(Circle);
