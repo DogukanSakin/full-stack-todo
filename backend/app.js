@@ -13,4 +13,5 @@ app.use("/api", tagRoute);
 
 app.listen(port, () => {
   console.log(`Server is running ${port} port..`);
+  console.log("Aşkım, seni seviyorum.");
 });
