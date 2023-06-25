@@ -81,3 +81,18 @@ exports.deleteTask = async (req, res) => {
     });
   }
 };
+
+exports.deleteAllTasks = async (req, res) => {
+  try {
+    await Task.deleteMany();
+    res.status(200).json({
+      success: true,
+      message: "All tasks deleted successfully.",
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Error while deleting all tasks.",
+    });
+  }
+};
