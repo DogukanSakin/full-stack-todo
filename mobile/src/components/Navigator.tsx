@@ -31,7 +31,7 @@ export default function Navigator() {
             headerShown: false,
             tabBarStyle: {
               position: "absolute",
-              backgroundColor: "rgba(255,255,255,0.1)",
+              backgroundColor: colors.lightOpacity,
             },
           }}
         >
