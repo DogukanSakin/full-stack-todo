@@ -13,6 +13,7 @@ interface IProps {
   overrideStyles?: string;
   onPress?: () => void;
   numberOfLines?: number;
+  isDecorated?: boolean;
 }
 export default function StyledText({
   overrideStyles,
@@ -20,6 +21,7 @@ export default function StyledText({
   fontFamily = "family-regular",
   onPress,
   numberOfLines,
+  isDecorated = false,
 }: IProps) {
   const { onLayoutRootView, fontsLoaded } = useFontFamily();
   if (!fontsLoaded) {
@@ -32,7 +34,10 @@ export default function StyledText({
         numberOfLines={numberOfLines}
         onPress={onPress}
         className={`${overrideStyles}`}
-        style={{ fontFamily: fontFamily }}
+        style={{
+          fontFamily: fontFamily,
+          textDecorationLine: isDecorated ? "line-through" : "none",
+        }}
       >
         {text}
       </Text>

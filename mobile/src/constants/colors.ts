@@ -8,4 +8,5 @@ export const colors = {
     white : '#ffffff',
     primary: '#4a29ab',
     modalGradientColors : ['#a53291',"#5abed8"],
+    completed : '#26fc6a',
 }

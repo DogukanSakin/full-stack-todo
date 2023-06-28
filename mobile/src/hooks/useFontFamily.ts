@@ -15,7 +15,7 @@ export default function useFontFamily() {
   //Yükleme tamamlanmazsa girişteki loading ekranında kullanıcı bekler
   const onLayoutRootView = useCallback(async () => {
     if (fontsLoaded) {
-      await SplashScreen.hideAsync();
+   
     }
   }, [fontsLoaded]);
   return { onLayoutRootView, fontsLoaded };

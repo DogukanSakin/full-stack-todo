@@ -23,6 +23,7 @@ module.exports = {
         threeQuarterOpacity : 'rgba(255,255,255,0.7)',
         white : '#ffffff',
         primary: '#4a29ab',
+        completed: '#26fc6a',
       },
       fontFamily: {
         "family-black": ["family-black"],

@@ -2,7 +2,7 @@ import React, { useCallback, useEffect } from "react";
 import { ImageBackground, SafeAreaView, View, FlatList } from "react-native";
 import StyledText from "../components/StyledText";
 import CircularProgress from "../components/CircularProgress";
-import { fetchTodos } from "../store/features/toDoSlice";
+import { fetchTodos, updateTodo } from "../store/features/toDoSlice";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import Task from "../models/Task";
 import TaskCard from "../components/cards/TaskCard";
@@ -13,7 +13,8 @@ export default function Home() {
 
   //Mark: - States
   const todoData = useAppSelector((state) => state.todo.todos);
-
+  const completedPercentage =
+    useAppSelector((state) => state.todo.completedPercentage) || 0;
   //Mark: - Hooks
 
   useEffect(() => {
@@ -23,9 +24,13 @@ export default function Home() {
   //Mark: - Functions
 
   //Mark: - Render
-  const renderTodos = useCallback(
-    ({ item }: { item: Task }) => <TaskCard item={item} />,
-    [todoData]
+  const renderTodos = ({ item }: { item: Task }) => (
+    <TaskCard
+      item={item}
+      onPress={() => {
+        dispatch(updateTodo({ ...item, completed: !item.completed }));
+      }}
+    />
   );
 
   return (
@@ -38,11 +43,12 @@ export default function Home() {
         {/*main container */}
         <View className="p-[20px]">
           {/*dashboard */}
+
           <View className="bg-lightOpacity p-[20px] rounded justify-between flex-row">
             {/*dashboard header*/}
             <View>
               <StyledText
-                overrideStyles="text-white"
+                overrideStyles="text-white text-xlarge"
                 text="Hello 👋"
                 fontFamily="family-semiBold"
               />
@@ -56,16 +62,16 @@ export default function Home() {
             </View>
 
             {/*dashboard progess*/}
-            <CircularProgress size={50} strokeWidth={3} progress={0.4} />
+            <CircularProgress
+              size={50}
+              strokeWidth={3}
+              progress={completedPercentage}
+            />
           </View>
 
           {/*todo list data*/}
 
-          <FlatList
-            data={todoData}
-            renderItem={renderTodos}
-            keyExtractor={(item): any => item._id}
-          />
+          <FlatList data={todoData} renderItem={renderTodos} />
         </View>
       </SafeAreaView>
     </ImageBackground>
