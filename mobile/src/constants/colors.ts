@@ -9,4 +9,6 @@ export const colors = {
     primary: '#4a29ab',
     modalGradientColors : ['#a53291',"#5abed8"],
     completed : '#26fc6a',
+    green:"#26fc6a",
+  
 }

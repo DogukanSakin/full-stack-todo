@@ -15,13 +15,13 @@ export default function StyledInput({
 }: IProps) {
   return (
     <View
-      className={`flex flex-row items-center justify-center bg-lightOpacity rounded-[20px] p-[20px] ${overrideStyles}`}
+      className={`flex flex-row items-center justify-center bg-lightOpacity rounded-[10px] p-[20px] ${overrideStyles}`}
     >
       <TextInput
         onChangeText={onChangeText}
         placeholder={placeholder}
         placeholderTextColor={colors.threeQuarterOpacity}
-        className="flex-1 text-white text-xlarge  font-family-bold"
+        className="flex-1 text-white text-xlarge  font-family-semiBold"
       />
     </View>
   );
