@@ -4,7 +4,7 @@ require("./src/config/dbConnection");
 const taskRoute = require("./src/routes/taskRoute");
 const tagRoute = require("./src/routes/tagRoute");
 const app = express();
-const port = process.env.PORT || 4000;
+const port = process.env.PORT || 3000;
 
 app.use(express.json());
 
@@ -13,5 +13,5 @@ app.use("/api", tagRoute);
 
 app.listen(port, () => {
   console.log(`Server is running ${port} port..`);
-  console.log("Aşkım, seni seviyorum.");
+
 });
