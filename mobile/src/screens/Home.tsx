@@ -11,7 +11,10 @@ import StyledText from "../components/StyledText";
 import CircularProgress from "../components/CircularProgress";
 import {
   calculateCompletedPercentage,
+  clearSelectedTodo,
+  deleteTodoById,
   fetchTodos,
+  setSelectedTodo,
   setTodos,
   updateTodo,
 } from "../store/features/toDoSlice";
@@ -21,12 +24,16 @@ import TaskCard from "../components/cards/TaskCard";
 import StyledInput from "../components/StyledInput";
 import { AntDesign } from "@expo/vector-icons";
 import { colors } from "../constants/colors";
+import { showSuccessNotification } from "../store/features/notificationSlice";
+import { closeModal, openModal } from "../store/features/modalSlice";
+import TaskModal from "../components/modals/TaskModal";
 
 export default function Home() {
   const dispatch = useAppDispatch();
 
   //Mark: - States
   const fetchedData = useAppSelector((state) => state.todo.todos);
+  const taskModalVisible = useAppSelector((state) => state.modal.modals.task);
 
   const [dashboardComponent, setDashboardComponent] = useState<
     "dashboard" | "searchBar"
@@ -68,13 +75,24 @@ export default function Home() {
     dispatch(setTodos(searchResult));
   };
 
+  const handleEditTodo = (item: Task) => {
+    dispatch(setSelectedTodo(item));
+    dispatch(openModal("task"));
+  };
+
+  const handleModalClose = () => {
+    dispatch(closeModal("task"));
+    dispatch(clearSelectedTodo());
+  };
+
   //Mark: - Render
   const renderTodos = ({ item }: { item: Task }) => (
     <TaskCard
       item={item}
+      onUpdate={handleEditTodo}
+      onDelete={() => dispatch(deleteTodoById(item))}
       onPress={() => {
         dispatch(updateTodo({ ...item, completed: !item.completed }));
-
         dispatch(calculateCompletedPercentage());
       }}
     />
@@ -87,6 +105,10 @@ export default function Home() {
       source={require("../../assets/background/background.jpg")}
     >
       <SafeAreaView className="flex-1">
+        {/*Task modal */}
+        {taskModalVisible && (
+          <TaskModal isVisible={taskModalVisible} onClose={handleModalClose} />
+        )}
         {/*main container */}
         <View className="p-[20px]">
           {/*actions button */}
@@ -125,7 +147,11 @@ export default function Home() {
           </View>
 
           {/*todo list data*/}
-          <FlatList data={fetchedData} renderItem={renderTodos} />
+          <FlatList
+            data={fetchedData}
+            renderItem={renderTodos}
+            keyExtractor={(item) => item._id!!}
+          />
         </View>
       </SafeAreaView>
     </ImageBackground>

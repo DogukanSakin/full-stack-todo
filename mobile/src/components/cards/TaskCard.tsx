@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Pressable, Animated } from "react-native";
+import { View, Pressable } from "react-native";
 
 import { Entypo, Feather } from "@expo/vector-icons";
 import { Swipeable } from "react-native-gesture-handler";
@@ -11,58 +11,53 @@ import { colors } from "../../constants/colors";
 interface IProps {
   item: Task;
   onPress?: () => void;
-  onSwipeLeft?: (item: Task) => void;
-  onSwipeRight?: (item: Task) => void;
+  onUpdate: (item: Task) => void;
+  onDelete: (item: Task) => void;
 }
 
 export default function TaskCard({
   item,
   onPress,
-  onSwipeRight,
-  onSwipeLeft,
+  onUpdate,
+  onDelete,
 }: IProps) {
   //Mark: - States
-  const [swipeStatus, setSwipeStatus] = useState<"began" | "ended">();
+  const [swipeFinished, setSwipeFinished] = useState<boolean>(true);
 
-  //Mark: - Functions
-  const handleSwipeableWillOpen = (direction: "left" | "right") => {
-    console.log("direction", direction);
-
-    if (direction === "left") {
-    } else if (direction === "right") {
-    }
-  };
+  //Mark: - Handlers
 
   const handleOnPress = () => {
-    if (swipeStatus === "ended" && onPress) {
+    if (swipeFinished === true && onPress) {
       onPress();
     }
   };
 
   //Mark: - Render
-  const renderLeftActions = () => {
+  const renderActions = () => {
     return (
-      <View className="bg-primary mt-[10px] p-[20px] rounded-[10px]">
-        <Feather name="edit-3" size={20} color={colors.white} />
-      </View>
-    );
-  };
-
-  const renderRightActions = () => {
-    return (
-      <View className="bg-red mt-[10px] p-[20px] rounded-[10px] flex-1 justify-center items-center self-center">
-        <Feather name="trash" size={20} color={colors.white} />
+      <View className="flex-row">
+        <Pressable
+          onPress={() => onUpdate(item)}
+          className="bg-primary mt-[10px] p-[20px] rounded-[10px]  justify-center items-center self-center"
+        >
+          <Feather name="edit-3" size={20} color={colors.white} />
+        </Pressable>
+        <Pressable
+          onPress={() => onDelete(item)}
+          className="bg-red mt-[10px] p-[20px] rounded-[10px] justify-center items-center self-center"
+        >
+          <Feather name="trash" size={20} color={colors.white} />
+        </Pressable>
       </View>
     );
   };
 
   return (
     <Swipeable
-      onSwipeableWillOpen={handleSwipeableWillOpen}
-      renderLeftActions={renderLeftActions}
-      renderRightActions={renderRightActions}
-      onBegan={() => setSwipeStatus("began")}
-      onEnded={() => setSwipeStatus("ended")}
+      onActivated={() => setSwipeFinished(false)}
+      onSwipeableClose={() => setSwipeFinished(true)}
+      renderLeftActions={renderActions}
+      renderRightActions={renderActions}
     >
       <Pressable
         onPress={handleOnPress}
