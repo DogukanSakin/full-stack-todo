@@ -1,8 +1,9 @@
 const Task = require("../models/Task");
+const Tag = require("../models/Tag");
 
 exports.getTasks = async (req, res) => {
   try {
-    const tasks = await Task.find();
+    const tasks = await Task.find().populate("tags"); // tags alanını da popüle ediyoruz
     res.status(200).json({
       success: true,
       data: tasks,
@@ -17,7 +18,7 @@ exports.getTasks = async (req, res) => {
 
 exports.addTask = async (req, res) => {
   try {
-    const { name } = req.body;
+    const { name, tags } = req.body;
     const existingTask = await Task.findOne({ name });
     if (existingTask) {
       return res.status(400).json({
@@ -25,7 +26,23 @@ exports.addTask = async (req, res) => {
         message: "A task with this name already exists.",
       });
     }
-    const newTask = new Task(req.body);
+
+    // Tag'leri kontrol edip, var olanları eklemek veya yeni tagleri oluşturmak için
+    const tagIds = [];
+    for (const tag of tags) {
+      let existingTag = await Tag.findOne({ name: tag.name });
+      if (!existingTag) {
+        existingTag = new Tag(tag);
+        await existingTag.save();
+      }
+      tagIds.push(existingTag._id);
+    }
+
+    const newTask = new Task({
+      name,
+      tags: tagIds,
+    });
+
     await newTask.save();
     res.status(201).json(newTask);
   } catch (error) {

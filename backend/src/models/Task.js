@@ -11,6 +11,12 @@ const taskSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    tags: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Tag",
+      },
+    ],
   },
   { collection: "Task", timestamps: true }
 );
