@@ -9,11 +9,12 @@ interface IModalState {
 const initialState: IModalState = {
   modals: {
     task: false,
+    selectable: false,
 
   },
 };
 
-type enabledModals = "task";
+type enabledModals = "task" | "selectable";
 export const modalSlice = createSlice({
   name: "modalVisible",
   initialState,

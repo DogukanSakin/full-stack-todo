@@ -12,6 +12,7 @@ import CircularProgress from "../components/CircularProgress";
 import {
   calculateCompletedPercentage,
   clearSelectedTodo,
+  deleteAllTodos,
   deleteTodoById,
   fetchTodos,
   setSelectedTodo,
@@ -22,11 +23,11 @@ import { useAppDispatch, useAppSelector } from "../store/hooks";
 import Task from "../models/Task";
 import TaskCard from "../components/cards/TaskCard";
 import StyledInput from "../components/StyledInput";
-import { AntDesign } from "@expo/vector-icons";
+import { AntDesign, Feather } from "@expo/vector-icons";
 import { colors } from "../constants/colors";
-import { showSuccessNotification } from "../store/features/notificationSlice";
 import { closeModal, openModal } from "../store/features/modalSlice";
 import TaskModal from "../components/modals/TaskModal";
+import SelectableModal from "../components/modals/SelectableModal";
 
 export default function Home() {
   const dispatch = useAppDispatch();
@@ -34,6 +35,9 @@ export default function Home() {
   //Mark: - States
   const fetchedData = useAppSelector((state) => state.todo.todos);
   const taskModalVisible = useAppSelector((state) => state.modal.modals.task);
+  const selectableModalVisibile = useAppSelector(
+    (state) => state.modal.modals.selectable
+  );
 
   const [dashboardComponent, setDashboardComponent] = useState<
     "dashboard" | "searchBar"
@@ -72,7 +76,7 @@ export default function Home() {
     const searchResult = fetchedData.filter((item) =>
       item.name!!.toLowerCase().includes(text.toLowerCase())
     );
-    dispatch(setTodos(searchResult));
+    dispatch(text.trim().length > 0 ? setTodos(searchResult) : fetchTodos());
   };
 
   const handleEditTodo = (item: Task) => {
@@ -83,6 +87,11 @@ export default function Home() {
   const handleModalClose = () => {
     dispatch(closeModal("task"));
     dispatch(clearSelectedTodo());
+  };
+
+  const handleDeleteAllTodos = () => {
+    dispatch(deleteAllTodos());
+    dispatch(closeModal("selectable"));
   };
 
   //Mark: - Render
@@ -109,12 +118,33 @@ export default function Home() {
         {taskModalVisible && (
           <TaskModal isVisible={taskModalVisible} onClose={handleModalClose} />
         )}
+
+        {/*selectable modal */}
+        {selectableModalVisibile && (
+          <SelectableModal
+            message="Are you sure you want to delete all tasks?"
+            isVisible={selectableModalVisibile}
+            onClose={() => dispatch(closeModal("selectable"))}
+            onYes={handleDeleteAllTodos}
+          />
+        )}
         {/*main container */}
         <View className="p-[20px]">
           {/*actions button */}
           <View className="flex-row justify-end">
+            {/*delete all todos */}
+            {fetchedData.length > 0 && (
+              <Pressable
+                className="bg-lightOpacity h-[32px] w-[32px] rounded justify-center items-center mr-[12px]"
+                onPress={() => dispatch(openModal("selectable"))}
+              >
+                <Feather name="trash-2" size={24} color={colors.red} />
+              </Pressable>
+            )}
+
+            {/*search todos */}
             <Pressable
-              className="bg-lightOpacity h-[24px] w-[24px] rounded justify-center items-center"
+              className="bg-lightOpacity h-[32px] w-[32px] rounded justify-center items-center"
               onPress={
                 dashboardComponent === "dashboard"
                   ? handleSearchBarOpen

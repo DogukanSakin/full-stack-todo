@@ -23,6 +23,8 @@ export const todosSlice = createSlice({
   initialState,
   reducers: {
     setTodos: (state, action: PayloadAction<Task[]>) => {
+      console.log(action.payload);
+      
       state.todos = action.payload
     },
 
@@ -51,32 +53,28 @@ export const todosSlice = createSlice({
       state.selectedTodo = undefined
     }
 
-
-
-
-
-    
-
   },
 })
 
 export const fetchTodos = () => async (dispatch: any) => {
-  const fetchedData = await axios.get('http://localhost:3000/api/task').then(res =>{
+ await axios.get('http://localhost:3000/api/task').then(res =>{
     dispatch(setTodos(res.data.data as Task[]));
     dispatch(calculateCompletedPercentage());
     return res.data.data;
   }).catch(()=>dispatch(showErrorNotification("Error fetching data")));
-  return fetchedData;
 }
 export const addNewTodo = (task: Task) => async (dispatch: any) => {
+  console.log(task);
+  
   await axios.post('http://localhost:3000/api/task', task).then((res)=>{    
     dispatch(addTodo({...task,...res.data}));
     dispatch(calculateCompletedPercentage());
-  }).catch(()=>dispatch(showErrorNotification("Error adding new task")));
+  }).catch((error)=>{
+    console.log(error);
+    
+    dispatch(showErrorNotification("Error adding new task"))});
 }
 export const updateTodo = (task:Task) => async (dispatch: any) => {
-  console.log(task);
-  
   await axios.put(`http://localhost:3000/api/task/${task._id}`,task).then(()=>{
     dispatch(updateTodos(task));
     dispatch(calculateCompletedPercentage());
@@ -90,6 +88,15 @@ export const deleteTodoById = (task:Task) => async (dispatch: any) => {
   }
   ).catch(()=>dispatch(showErrorNotification("Error deleting task")));
 }
+
+export const deleteAllTodos = () => async (dispatch: any) => {
+  await axios.delete(`http://localhost:3000/api/task`).then(()=>{
+    dispatch(setTodos([]));
+    dispatch(calculateCompletedPercentage());
+  }
+  ).catch(()=>dispatch(showErrorNotification("Error deleting all tasks")));
+}
+
 
 
 export const { setTodos,addTodo,updateTodos,calculateCompletedPercentage,deleteTodo ,setSelectedTodo,clearSelectedTodo} = todosSlice.actions

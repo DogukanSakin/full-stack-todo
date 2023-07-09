@@ -30,9 +30,9 @@ export default function TaskModal({ isVisible, onClose }: IProps) {
   const handleAddTodo = async () => {
     if (newTask?.name === undefined || newTask?.name === "") return;
     setLoading(true);
-    (await selectedTodo)
-      ? dispatch(updateTodo({ ...selectedTodo, ...newTask }))
-      : dispatch(addNewTodo(newTask));
+    selectedTodo
+      ? await dispatch(updateTodo({ ...selectedTodo, ...newTask }))
+      : await dispatch(addNewTodo(newTask));
     setLoading(false);
     onClose();
   };

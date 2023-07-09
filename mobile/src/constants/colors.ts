@@ -10,5 +10,6 @@ export const colors = {
     modalGradientColors : ['#a53291',"#5abed8"],
     completed : '#26fc6a',
     green:"#26fc6a",
-  
+    red : '#fc2626',
+    opacityRed : 'rgba(255,0,0,0.5)',
 }

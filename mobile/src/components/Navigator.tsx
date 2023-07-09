@@ -18,6 +18,7 @@ import { BlurView } from "expo-blur";
 export default function Navigator() {
   const Tab = createBottomTabNavigator();
   const dispatch = useAppDispatch();
+
   // Mark: - Add Modal
   const addModalVisible = useAppSelector((state) => state.modal.modals.task);
 
