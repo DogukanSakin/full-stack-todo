@@ -1,18 +1,19 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
-export interface IModalState {
+
+interface IModalState {
   modals: {
     [key: string]: boolean;
   };
 }
 const initialState: IModalState = {
   modals: {
-    add: false,
+    task: false,
 
   },
 };
 
-type enabledModals = "add";
+type enabledModals = "task";
 export const modalSlice = createSlice({
   name: "modalVisible",
   initialState,

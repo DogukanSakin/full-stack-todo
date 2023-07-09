@@ -2,10 +2,12 @@ import { configureStore } from '@reduxjs/toolkit'
 
 import todoReducer from './features/toDoSlice';
 import modalReducer from './features/modalSlice';
+import notificationReducer from './features/notificationSlice';
 export const store = configureStore({
   reducer: {
     todo: todoReducer,
     modal: modalReducer,
+    notification: notificationReducer
   },
 })
 

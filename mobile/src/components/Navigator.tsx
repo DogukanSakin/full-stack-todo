@@ -5,7 +5,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { closeModal, openModal } from "../store/features/modalSlice";
 
-import AddModal from "./modals/AddModal";
+import TaskModal from "./modals/TaskModal";
 import Home from "../screens/Home";
 import Tags from "../screens/Tags";
 
@@ -19,14 +19,14 @@ export default function Navigator() {
   const Tab = createBottomTabNavigator();
   const dispatch = useAppDispatch();
   // Mark: - Add Modal
-  const addModalVisible = useAppSelector((state) => state.modal.modals.add);
+  const addModalVisible = useAppSelector((state) => state.modal.modals.task);
 
   //Mark: - Render
   return (
     <>
-      <AddModal
+      <TaskModal
         isVisible={addModalVisible}
-        onClose={() => dispatch(closeModal("add"))}
+        onClose={() => dispatch(closeModal("task"))}
       />
       <View style={{ flex: 1 }}>
         <Tab.Navigator
@@ -61,7 +61,7 @@ export default function Navigator() {
               tabBarLabel: () => null,
               tabBarButton: () => (
                 <Pressable
-                  onPress={() => dispatch(openModal("add"))}
+                  onPress={() => dispatch(openModal("task"))}
                   className="justify-center items-center self-center bottom-[40px]  w-[70px] h-[70px] rounded-full"
                   style={{
                     backgroundColor: "transparent",

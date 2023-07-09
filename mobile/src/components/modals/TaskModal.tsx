@@ -9,8 +9,8 @@ import StyledText from "../StyledText";
 import { colors } from "../../constants/colors";
 import StyledButton from "../StyledButton";
 import { LinearGradient } from "expo-linear-gradient";
-import { useAppDispatch } from "../../store/hooks";
-import { addNewTodo } from "../../store/features/toDoSlice";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { addNewTodo, updateTodo } from "../../store/features/toDoSlice";
 import Task from "../../models/Task";
 
 interface IProps {
@@ -18,18 +18,26 @@ interface IProps {
   onClose: () => void;
 }
 
-export default function AddModal({ isVisible, onClose }: IProps) {
+export default function TaskModal({ isVisible, onClose }: IProps) {
+  //Mark: - States
   const dispatch = useAppDispatch();
   const [loading, setLoading] = useState(false);
-  const [newTask, setNewTask] = useState<Task>();
+  const selectedTodo = useAppSelector((state) => state.todo.selectedTodo);
+  const [newTask, setNewTask] = useState<Task>({ ...selectedTodo });
+
+  //Mark: - Handlers
+
   const handleAddTodo = async () => {
     if (newTask?.name === undefined || newTask?.name === "") return;
     setLoading(true);
-    await dispatch(addNewTodo(newTask));
+    (await selectedTodo)
+      ? dispatch(updateTodo({ ...selectedTodo, ...newTask }))
+      : dispatch(addNewTodo(newTask));
     setLoading(false);
     onClose();
   };
 
+  //Mark: - Render
   return (
     <Modal
       isVisible={isVisible}
@@ -56,6 +64,7 @@ export default function AddModal({ isVisible, onClose }: IProps) {
           />
         </View>
         <StyledInput
+          value={newTask?.name}
           placeholder="Write your task..."
           onChangeText={(t: string) => setNewTask({ name: t })}
         />
